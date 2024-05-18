@@ -311,6 +311,7 @@ def SE_hierar_clustering_scalable(path):
 def SSSE_pairwise_clustering_bio(path):
     args.metric = 'cosine'
     args.normalization = "MinMaxScaler"
+    args.mergestop_SE = 1
     data = scipy.io.loadmat(path)
     X = np.array(data['fea']).astype(float)
     y = np.array(data['gnd']).astype(float).squeeze()
@@ -354,6 +355,7 @@ def SSSE_pairwise_clustering_bio(path):
 def SSSE_label_clustering_bio(path):
     args.metric = 'cosine'
     args.normalization = "MinMaxScaler"
+    args.mergestop_SE = 1
     if args.dataset == 'Karagiannis':
         args.normalization = "StandardScaler"
     data = scipy.io.loadmat(path)
@@ -399,6 +401,7 @@ def SSSE_label_clustering_bio(path):
 def SE_partitioning_clustering_scalable_bio(path):
     args.metric = 'cosine'
     args.normalization = "MinMaxScaler"
+    args.mergestop_SE = 1
     if args.dataset == 'Karagiannis':
         args.normalization = "StandardScaler"
     data = scipy.io.loadmat(path)
