@@ -444,6 +444,8 @@ def SE_partitioning_clustering_scalable_bio(path):
 
 
 if __name__=='__main__':
+    if args.dataset in ["ORL", "COIL100"]:
+        args.knn_constant = 40
     if args.method == "SSSE_partitioning_pairwise":
         path = "./datasets/clustering/{}.mat".format(args.dataset)
         SSSE_pairwise_clustering(path)
