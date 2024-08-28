@@ -1,26 +1,30 @@
 import time
 
+from sklearn.cluster import KMeans
 from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
 from active_semi_clustering.semi_supervised.labeled_data import SeededKMeans
 import scipy
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 
-def SeededKMeans_ordinary(path):
+def seededKMeans(path):
     data = scipy.io.loadmat(path)
+    # print(data.keys())
     X = np.array(data["fea"]).astype(float)
     X = MinMaxScaler().fit_transform(X)
     y = np.array(data["gnd"]).astype(float).squeeze()
     y = y - np.min(y)
+    n_cluster = np.unique(y).shape[0]
 
-    PL = generate_constraint_labels(y, int(y.shape[0]*0.1))
-    print(PL, np.sum(PL))
+    PL = generate_constraint_labels_old(y, int(y.shape[0] * 0.1))
     time1 = time.time()
-    clusterer = SeededKMeans(n_clusters=len(np.unique(y)))
-    clusterer.fit(X, PL)
+    cluster_centers = np.array([X[PL == i].mean(axis=0) for i in range(n_cluster)])
+    clusterer = KMeans(n_clusters=n_cluster, init=cluster_centers)
+    clusterer.fit(X)
+    pred = clusterer.labels_
     time2 = time.time()
-    ARI = adjusted_rand_score(y,clusterer.labels_)
-    NMI = normalized_mutual_info_score(y,clusterer.labels_)
+    ARI = adjusted_rand_score(y, pred)
+    NMI = normalized_mutual_info_score(y, pred)
     return ARI, NMI, time2-time1
 
 
@@ -36,8 +40,7 @@ def generate_constraint_labels(y, N):
     return PL
 
 if __name__=='__main__':
-    # for dataset in ["Yale", "ORL", "COIL20", "COIL100", "USPS", "MNIST", "CovType"]:
-    for dataset in ["COIL100", "USPS", "MNIST", "CovType"]:
+    for dataset in ["COIL100", "USPS", "MNIST"]:
         path = "/home/zengguangjie/SSSE/datasets/ordinary/{}.mat".format(dataset)
         ARIs = []
         NMIs = []
