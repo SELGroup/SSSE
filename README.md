@@ -10,7 +10,7 @@ For semi-supervised partitioning clustering, clustering in (II) and (III) is ach
 # Installation
 Install the required packages listed in the file ```requirement.txt```. The code is tested on Python 3.10.0.
 
-Datasets used are in the ```data``` branch.
+**Datasets used are in the ```data``` branch.**
 
 # Usage
 In the root directory of this project:
